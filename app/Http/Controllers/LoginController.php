@@ -8,7 +8,14 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function index() {
-        return view('login', [
+        // if(!Session()->get('login')) {
+        //     return redirect('login')->with('alert', 'Anda belum login');
+        // } else {
+        //     return view('user.login', [
+        //         'title' => 'Login'
+        //     ]);
+        // }
+        return view('user.login', [
             'title' => 'Login'
         ]);
     }
@@ -19,12 +26,31 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
+        // if ($user->id_role == 1) {
+        //     return redirect('/admin');
+        // }
+        // if ($user->id_role == 2) {
+        //     return redirect('/driver');
+        // }
+        // if ($user->id_role == 3) {
+        //     return redirect('/user');
+        // }
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            if(Auth::user()->id_role == 1) {
+                return redirect('/admin/dashboard');
+            } else if(Auth::user()->id_role == 2) {
+                return redirect('/driver/dashboard');
+            } else if(Auth::user()->id_role == 3) {
+                return redirect('/home');
+            } else if(Auth::user()->id_role == 4) {
+                return redirect('/owner/dashboard');
+            }
+            // return redirect('/admin/dashboard');
         }
 
-        return back()->with('loginError', 'Login Failed');
+        return back()->with('loginError', 'Login Gagal, Pastikan Email dan Password Anda Benar!');
 
     }
     

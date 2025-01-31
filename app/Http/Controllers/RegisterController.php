@@ -8,18 +8,20 @@ use App\Models\User;
 class RegisterController extends Controller
 {
     public function index() {
-        return view('register', [
+        return view('user.register', [
             'title' => 'Register'
         ]);
     }
 
     public function store(Request $request) {
+        
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'no_hp' => 'required|max:255',
             'gender' => 'required',
             'email' => ['required', 'email:dns', 'unique:users,email'],
             'password' => 'required|min:5|max:255|confirmed',
+            
 
         ]);
         
@@ -29,6 +31,6 @@ class RegisterController extends Controller
 
         // $request->session()->flash('success', 'Registration successfull! Please login!');
 
-        return redirect('/login')->with('success', 'Registration successfull! Please Login');
+        return redirect('/login')->with('success', 'Pendaftaran Akun Berhasil, Silahkan Masuk dengan akun yang telah didaftarkan!');
     }
 }
